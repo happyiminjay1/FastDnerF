@@ -45,7 +45,7 @@ def cache_raw(pts, viewdirs, time, u=None, v=None, w=None, beta=None, sigma=None
         v_find = v[new_pts_indices[:, 0], new_pts_indices[:, 1], new_pts_indices[:, 2]]
         w_find = w[new_pts_indices[:, 0], new_pts_indices[:, 1], new_pts_indices[:, 2]]
 
-        sigma_find = sigma[point_indices[i:i+chunk, 0], point_indices[i:i+chunk, 1], point_indices[i:i+chunk, 2]]
+        sigma_find = sigma[new_pts_indices[:, 0], new_pts_indices[:, 1], new_pts_indices[:, 2]]
         beta_find = torch.ones_like(u_find)
 
         r = (u_find * beta_find).sum(-1)
@@ -883,7 +883,7 @@ def train():
             print('test poses shape', render_poses.shape)
 
             rgbs, _ = render_path(render_poses, render_times, hwf, args.chunk, render_kwargs_test, gt_imgs=images,
-                                  savedir=testsavedir, render_factor=args.render_factor, save_also_gt=False, use_cache=args.use_cache)
+                                  savedir=testsavedir, render_factor=args.render_factor, save_also_gt=True, use_cache=args.use_cache)
             print('Done rendering', testsavedir)
             imageio.mimwrite(os.path.join(testsavedir, 'video.mp4'), to8b(rgbs), fps=30, quality=8)
 
